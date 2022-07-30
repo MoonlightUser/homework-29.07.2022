@@ -124,4 +124,5 @@ login: true,
 money: 1000,
 password: "PDDfe233",
 sname: "Marenych",
+purchases: [],
 }]

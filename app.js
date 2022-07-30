@@ -20,6 +20,16 @@ document.getElementById("chep-exp")?.addEventListener("click", ()=>{
     }
 })
 
+document.getElementsByClassName("logout")[0]?.addEventListener("click", ()=>{
+    user = {
+        login: false
+    }
+    fromTo("autorisated","not-autorisated" )
+    document.getElementsByClassName("not-autorisated")[0].style.position = "relative"
+    document.getElementsByClassName("autorisated")[0].style.position = "absolute"
+    createElements(TECH)
+})
+
 document.getElementById("exp-chep")?.addEventListener("click", ()=>{
     if(user.login === false) alert("You arent log in")
     else{
@@ -54,21 +64,45 @@ document.getElementById("tvs")?.addEventListener("click", ()=>{
     }
 })
 
+for (let idCart in TECH){
+    document.getElementById(`buy-btn-${idCart}`)?.addEventListener("click", () => {
+        if(!user.login) alert("You arent log in")
+        else{
+            // user.money
+            // user.purchases
+            if (TECH[idCart].price > user.money){
+                alert("Not enough money")
+            }
+            else {
+                user.money -= TECH[idCart].price
+                user.purchases.push(idCart)
+                document.getElementsByClassName("money")[0].innerHTML = "£"+user.money
+            }
+            
+        }
+    })
+}
+
 document.getElementById("main_page__reg")?.addEventListener("click", ()=>{
+    document.getElementsByClassName("not-autorisated")[0].style.visibility = "visible"
     fromTo("regin__page","main__page")
 })
 
 
 document.getElementById("main_page__log")?.addEventListener("click", ()=>{
+    document.getElementsByClassName("not-autorisated")[0].style.visibility = "visible"
     fromTo("login__page","main__page")
 })
 
 document.getElementById("login")?.addEventListener("click", ()=>{
     fromTo("main__page", "login__page")
+    document.getElementsByClassName("not-autorisated")[0].style.visibility = "hidden"
 })
 
 document.getElementById("signin")?.addEventListener("click", ()=>{
     fromTo("main__page", "regin__page")
+    document.getElementsByClassName("not-autorisated")[0].style.visibility = "hidden"
+
 })
 
 function loginCheck(form){
@@ -78,30 +112,24 @@ function loginCheck(form){
     else{
         let email = document.forms[form]["email"].value;
         let password = document.forms[form]["password"].value;
-        USERS.forEach((member)=>{
-            if (member.email === email){
-                if (member.password === password){
-                    user = member
+        for (let member in USERS){
+            if (USERS[member].email === email){
+                if (USERS[member].password === password){
+                    user = USERS[member]
                     alert("You loged in!")
                     fromTo("login__page", "main__page")
-                    replaceAutorise(user)
-                    return false
-                }
-                else{
-                    alert("sorry, but password incorect")
-                    return false
+                    replaceToAutorise(user)
+                    break
                 }
             }
-            else{
-                alert("sorry, we cant find this user")
-                return false
-            }
-        })
-        if (user.login == true)return false
-        else {alert("We havent users now(")
-        return false}
+        }
+        if (user.login != true){
+            alert("password or email is wrong, try again")
+        }
     }
+    return false
 }
+
 
 function validateForm(form) {
     let fname = document.forms[form]["fname"].value;
@@ -132,6 +160,18 @@ function validateForm(form) {
         alert("password invalid langth");
         return false;
     }
+    let chekEmailFlag = false
+    for (let member in USERS){
+        if (USERS[member].email === email) {
+            chekEmailFlag = true
+            break
+        }
+        else chekEmailFlag = false
+    }
+    if (chekEmailFlag === true){
+        alert("this email used now");
+        return false; 
+    }
     alert("you autorisated");
     user.login = true
     user.fname = fname
@@ -141,10 +181,10 @@ function validateForm(form) {
     user.password = password
     user.avatar = avatar
     user.money = 1000
-    USERS.push(user)
+    user.purchases = []
     console.log('%capp.js line:99 user', 'color: #007acc;', user);
     fromTo("regin__page", "main__page")
-    replaceAutorise(user)
+    replaceToAutorise(user)
     return false;
   }
 
@@ -153,27 +193,15 @@ function fromTo(from, to){
     document.getElementsByClassName(to)[0].style.visibility = "visible"
 }
 
-function checkImage(url) {
-    let request = new XMLHttpRequest();
-    request.open("GET", url, true);
-    request.send();
-    request.onload = function() {
-        let status = request.status;
-        if (request.status == 200) //if(statusText == OK)
-      { 
-        console.log("image exists");
-        return true
-      } else {
-        console.log("image doesn't exist");
-        return false
-      }
-    }
-  }
+function isImage(url) {
+    return /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(url);
+}
 
-function replaceAutorise(user){
+function replaceToAutorise(user){
     let autoris = document.getElementsByClassName("autorisated")[0]
     let notAutoris = document.getElementsByClassName("not-autorisated")[0]
-    if (!checkImage(user.avatar)){
+    if (isImage(user.avatar) == true){
+        console.log("ALL GOOOD");
         document.getElementsByClassName("user-avatar")[0].src = user.avatar
     }
     else{
@@ -183,6 +211,7 @@ function replaceAutorise(user){
     document.getElementsByClassName("user-name")[0].innerHTML = user.fname
     autoris.style.visibility = "visible"
     notAutoris.style.visibility = "hidden"
+    notAutoris.style.position = "absolute"
     autoris.style.position = "relative"
 }
 function createElements(TECH){
@@ -220,6 +249,7 @@ function createElements(TECH){
         let itemButton = document.createElement("button")
         itemButton.className = "product-btn"
         itemButton.innerHTML = "Buy"
+        itemButton.id = `buy-btn-${item}`
     
         
     

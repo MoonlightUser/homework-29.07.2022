@@ -2,11 +2,6 @@
 <html lang="en">
 
 <head>
-    <httpProtocol>
-        <customHeaders>
-            <add name="Access-Control-Allow-Origin" value="*" />
-        </customHeaders>
-    </httpProtocol>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,11 +28,11 @@
                 <button id="signin" class="signin">Sign in</button>
             </div>
             <div class="autorisated">
-                <div class="money">asdadasdad</div>
-                <div class="basket">dsfsfsd</div>
-                <div class="user-name">sdfsffsd</div>
+                <div class="money"></div>
+                <button class="basket-btn"><img class="basket-img" src="img/basket.png" alt=""></button>
+                <div class="user-name"></div>
                 <div class="user-avatar-wrapper"><img class="user-avatar" src="" alt="404"></div>
-                <div class="logout">sdfssfdf</div>
+                <button class="logout">log-out</button>
             </div>
         </header>
         <main>
@@ -91,7 +86,7 @@
                     <input type="password" name="password">
                 </div>
                 <div class="reg-part">
-                    <div class="avatar">Your avatar(Url img): </div>
+                    <div class="avatar">Your avatar(Url must end with <br>.png .jpg .jpeg .webp .avif .gif .svg): </div>
                     <input type="text" name="avatar">
                 </div>
                 <input class="reg_btn" type="submit" value="Submit">
@@ -114,7 +109,7 @@
             <form name="myFormLogin" action="" onsubmit="return loginCheck(`myFormLogin`)" method="get">
                 <div class="reg-part">
                     <div class="title">Email: </div>
-                    <input type="email" name="email">
+                    <input type="text" name="email">
                 </div>
                 <div class="reg-part">
                     <div class="title">Password: </div>
@@ -125,6 +120,7 @@
         </div>
     </div>
     <div class="totall__page"></div>
+
 
     <script src="dataBase.js"></script>
     <script src="app.js"></script>
