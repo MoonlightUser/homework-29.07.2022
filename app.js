@@ -63,24 +63,28 @@ document.getElementById("tvs")?.addEventListener("click", ()=>{
     createElements(techNow)
     }
 })
-
-for (let idCart in TECH){
-    document.getElementById(`buy-btn-${idCart}`)?.addEventListener("click", () => {
-        if(!user.login) alert("You arent log in")
-        else{
-            // user.money
-            // user.purchases
-            if (TECH[idCart].price > user.money){
-                alert("Not enough money")
+function makeListner(){
+    for (let idCart in TECH){
+        document.getElementById(`buy-btn-${idCart}`)?.addEventListener("click", () => {
+            console.log(idCart);
+            if(!user.login) alert("You arent log in")
+            else{
+                // user.money
+                // user.purchases
+                if (TECH[idCart].price > user.money){
+                    alert("Not enough money")
+                }
+                else {
+                    user.money -= TECH[idCart].price
+                    console.log(user.purchases);
+    
+                    user.purchases.push(idCart)
+                    document.getElementsByClassName("money")[0].innerHTML = "£"+user.money
+                }
+                
             }
-            else {
-                user.money -= TECH[idCart].price
-                user.purchases.push(idCart)
-                document.getElementsByClassName("money")[0].innerHTML = "£"+user.money
-            }
-            
-        }
-    })
+        })
+    }
 }
 
 document.getElementById("main_page__reg")?.addEventListener("click", ()=>{
@@ -261,4 +265,5 @@ function createElements(TECH){
     
         document.getElementsByClassName("products")[0].appendChild(itemDOM)
     }
+    makeListner()
 }
