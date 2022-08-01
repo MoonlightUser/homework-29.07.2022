@@ -4,6 +4,7 @@
     box-sizing: border-box;
 }
 
+.totall__page,
 .login__page,
 .main__page,
 .regin__page {
@@ -11,9 +12,17 @@
     position: absolute;
 }
 
+.totall__page,
 .login__page,
 .regin__page {
     visibility: hidden;
+}
+
+.purchases {
+    margin-top: 20px;
+    margin-right: 20%;
+    margin-left: 20%;
+    ;
 }
 
 body {
@@ -72,11 +81,16 @@ header {
 .autorisated {
     position: absolute;
     visibility: hidden;
+    justify-content: space-between;
 }
 
 #login {
     margin-right: 10px;
     font-size: 15px;
+}
+
+.basket-btn {
+    cursor: pointer;
 }
 
 .nav {
@@ -85,9 +99,9 @@ header {
     width: 30%;
 }
 
+.accaunt,
 .autorisated {
     width: 25%;
-    justify-content: space-between;
     align-items: center;
     font-size: 16px;
     font-weight: 500;
@@ -102,6 +116,10 @@ header {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: rgb(201, 76, 76);
     display: flex;
+}
+
+.user-name {
+    margin-right: 10px;
 }
 
 .user-avatar {
@@ -211,6 +229,7 @@ header {
     color: white;
 }
 
+.purchases,
 .products {
     display: grid;
     grid-template-columns: repeat(4, 320px);

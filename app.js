@@ -1,5 +1,5 @@
 // document.getElementsByClassName("products")[0].textContent = "" //cleaner
-createElements(TECH)
+createElements(TECH, true, true, false)
 let techNow = TECH
 
 document.getElementById("rating")?.addEventListener("click", ()=>{ 
@@ -47,6 +47,13 @@ document.getElementById("all")?.addEventListener("click", ()=>{
     }
 })
 
+document.getElementsByClassName("basket-btn")[0]?.addEventListener("click", ()=>{
+    console.log("clicked on basket");
+    fromTo("main__page", "totall__page")
+    document.getElementsByClassName("autorisated")[0].style.visibility = "hidden"
+    createElements(TECH, false, false, false)
+})
+
 document.getElementById("mobiles")?.addEventListener("click", ()=>{
     if(user.login === false) alert("You arent log in")
     else{
@@ -63,29 +70,6 @@ document.getElementById("tvs")?.addEventListener("click", ()=>{
     createElements(techNow)
     }
 })
-function makeListner(){
-    for (let idCart in TECH){
-        document.getElementById(`buy-btn-${idCart}`)?.addEventListener("click", () => {
-            console.log(idCart);
-            if(!user.login) alert("You arent log in")
-            else{
-                // user.money
-                // user.purchases
-                if (TECH[idCart].price > user.money){
-                    alert("Not enough money")
-                }
-                else {
-                    user.money -= TECH[idCart].price
-                    console.log(user.purchases);
-    
-                    user.purchases.push(idCart)
-                    document.getElementsByClassName("money")[0].innerHTML = "£"+user.money
-                }
-                
-            }
-        })
-    }
-}
 
 document.getElementById("main_page__reg")?.addEventListener("click", ()=>{
     document.getElementsByClassName("not-autorisated")[0].style.visibility = "visible"
@@ -98,6 +82,12 @@ document.getElementById("main_page__log")?.addEventListener("click", ()=>{
     fromTo("login__page","main__page")
 })
 
+// main_page__totall
+document.getElementById("main_page__totall")?.addEventListener("click", ()=>{
+    document.getElementsByClassName("autorisated")[0].style.visibility = "visible"
+    fromTo("totall__page","main__page")
+})
+
 document.getElementById("login")?.addEventListener("click", ()=>{
     fromTo("main__page", "login__page")
     document.getElementsByClassName("not-autorisated")[0].style.visibility = "hidden"
@@ -106,9 +96,31 @@ document.getElementById("login")?.addEventListener("click", ()=>{
 document.getElementById("signin")?.addEventListener("click", ()=>{
     fromTo("main__page", "regin__page")
     document.getElementsByClassName("not-autorisated")[0].style.visibility = "hidden"
-
+    
 })
 
+function makeListner(){
+    for (let idCart in TECH){
+        console.log(idCart);
+        document.getElementById(`buy-btn-${idCart}`)?.addEventListener("click", () => {
+            if(!user.login) alert("You arent log in")
+            else{
+                if (TECH[idCart].price > user.money){
+                    alert("Not enough money")
+                }
+                else {
+                    user.money -= TECH[idCart].price
+                    user.money = user.money.toFixed(2)
+                    user.purchases.push(TECH[idCart].id)
+                    document.getElementsByClassName("money")[0].innerHTML = "£"+user.money
+                }
+                
+            }
+            console.log(user.purchases);
+        })
+    }
+}
+makeListner()
 function loginCheck(form){
     if (user.login == true){
         alert("Sorry, you already log in")
@@ -206,64 +218,114 @@ function replaceToAutorise(user){
     let notAutoris = document.getElementsByClassName("not-autorisated")[0]
     if (isImage(user.avatar) == true){
         console.log("ALL GOOOD");
+        document.getElementsByClassName("user-avatar")[1].src = user.avatar
         document.getElementsByClassName("user-avatar")[0].src = user.avatar
     }
     else{
+        document.getElementsByClassName("user-avatar")[1].src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZlr0nV3MSR5rc0souSDovrbJ1NIj--YEqwQ&usqp=CAU"
         document.getElementsByClassName("user-avatar")[0].src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZlr0nV3MSR5rc0souSDovrbJ1NIj--YEqwQ&usqp=CAU"
     }
     document.getElementsByClassName("money")[0].innerHTML = "£"+user.money
     document.getElementsByClassName("user-name")[0].innerHTML = user.fname
+    document.getElementsByClassName("user-name")[1].innerHTML = user.fname
     autoris.style.visibility = "visible"
     notAutoris.style.visibility = "hidden"
     notAutoris.style.position = "absolute"
     autoris.style.position = "relative"
 }
-function createElements(TECH){
-    document.getElementsByClassName("products")[0].textContent = "" 
-    for (let item in TECH){
-        let itemDOM = document.createElement("div")
-        itemDOM.className = "cart"
-    
-        let itemWrapImg =  document.createElement("div")
-        itemWrapImg.className = "product-img-wrapper"
-    
-        let itemImage = document.createElement("img")
-        itemImage.className = "product-img"
-        itemImage.src = TECH[item].imgURL
-        itemWrapImg.appendChild(itemImage)
-    
-        let itemName = document.createElement("div")
-        itemName.className = "product-name"
-        itemName.innerHTML = TECH[item].title
-    
-        let itemDescription = document.createElement("div")
-        itemDescription.className = "description"
-        itemDescription.innerHTML = "Description:"
-        for (let option in TECH[item].description){
-            itemDescription.appendChild(document.createElement("br"))
-            itemDescription.innerHTML += `- ${option}: ${TECH[item].description[option]}`
-        }
-        itemDescription.appendChild(document.createElement("br"))
-        itemDescription.innerHTML += `- rating: ${TECH[item].rating}`
-    
-        let itemPrice = document.createElement("div")
-        itemPrice.className = "product-price"
-        itemPrice.innerHTML = "£"+TECH[item].price
-    
-        let itemButton = document.createElement("button")
-        itemButton.className = "product-btn"
-        itemButton.innerHTML = "Buy"
-        itemButton.id = `buy-btn-${item}`
-    
+function createElements(TECH, main = true, first = false, makeListnerFunc = true){
+    // debugger
+    if (main){
+        document.getElementsByClassName("products")[0].textContent = "" 
+        for (let item in TECH){
+            if (first){
+                TECH[item].id = item
+            }
+            let itemDOM = document.createElement("div")
+            itemDOM.className = "cart"
         
-    
-        itemDOM.appendChild(itemWrapImg)
-        itemDOM.appendChild(itemName)
-        itemDOM.appendChild(itemDescription)
-        itemDOM.appendChild(itemPrice)
-        itemDOM.appendChild(itemButton)
-    
-        document.getElementsByClassName("products")[0].appendChild(itemDOM)
+            let itemWrapImg =  document.createElement("div")
+            itemWrapImg.className = "product-img-wrapper"
+        
+            let itemImage = document.createElement("img")
+            itemImage.className = "product-img"
+            itemImage.src = TECH[item].imgURL
+            itemWrapImg.appendChild(itemImage)
+        
+            let itemName = document.createElement("div")
+            itemName.className = "product-name"
+            itemName.innerHTML = TECH[item].title
+        
+            let itemDescription = document.createElement("div")
+            itemDescription.className = "description"
+            itemDescription.innerHTML = "Description:"
+            for (let option in TECH[item].description){
+                itemDescription.appendChild(document.createElement("br"))
+                itemDescription.innerHTML += `- ${option}: ${TECH[item].description[option]}`
+            }
+            itemDescription.appendChild(document.createElement("br"))
+            itemDescription.innerHTML += `- rating: ${TECH[item].rating}`
+        
+            let itemPrice = document.createElement("div")
+            itemPrice.className = "product-price"
+            itemPrice.innerHTML = "£"+TECH[item].price
+        
+            let itemButton = document.createElement("button")
+            itemButton.className = "product-btn"
+            itemButton.innerHTML = "Buy"
+            itemButton.id = `buy-btn-${TECH[item].id}`
+        
+            itemDOM.appendChild(itemWrapImg)
+            itemDOM.appendChild(itemName)
+            itemDOM.appendChild(itemDescription)
+            itemDOM.appendChild(itemPrice)
+            itemDOM.appendChild(itemButton)
+        
+            document.getElementsByClassName("products")[0].appendChild(itemDOM)
+        }
+    console.log('%capp.js line:270 TECH', 'color: #007acc;', TECH);
+    if (makeListnerFunc){
+        makeListner()
     }
-    makeListner()
+    }
+    else{
+        let count = 0
+        document.getElementsByClassName("purchases")[0].textContent = "" 
+        for (let idPurchas in user.purchases){
+            for(let item in TECH){
+                if (TECH[item].id == user.purchases[idPurchas]){
+                    let itemDOM = document.createElement("div")
+                    itemDOM.className = "cart"
+                
+                    let itemWrapImg =  document.createElement("div")
+                    itemWrapImg.className = "product-img-wrapper"
+                
+                    let itemImage = document.createElement("img")
+                    itemImage.className = "product-img"
+                    itemImage.src = TECH[item].imgURL
+                    itemWrapImg.appendChild(itemImage)
+                
+                    let itemName = document.createElement("div")
+                    itemName.className = "product-name"
+                    itemName.innerHTML = TECH[item].title
+                
+                    let itemPrice = document.createElement("div")
+                    itemPrice.className = "product-price"
+                    itemPrice.innerHTML = "£"+TECH[item].price
+                
+                    let itemButton = document.createElement("button")
+                    itemButton.className = "product-btn"
+                    itemButton.innerHTML = "Cancel"
+                    itemButton.id = `cancel-btn-${count}`
+                
+                    itemDOM.appendChild(itemWrapImg)
+                    itemDOM.appendChild(itemName)
+                    itemDOM.appendChild(itemPrice)
+                    itemDOM.appendChild(itemButton)
+                
+                    document.getElementsByClassName("purchases")[0].appendChild(itemDOM)
+                }
+            }
+        }
+    }
 }
